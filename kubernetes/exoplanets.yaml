@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
       - name: exoplanets
-        image: quay.io/redhattraining/exoplanets:v1.0
+        image: quay.io/redhattraining/exoplanets:v1.1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -54,7 +54,21 @@ spec:
             name: exoplanets
         - secretRef:
             name: exoplanets
-        resources: {}
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 30
+          timeoutSeconds: 3
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          timeoutSeconds: 3
+        resources:
+          limits:
+            memory: 1Gi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
